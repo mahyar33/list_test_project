@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {injectIntl} from 'react-intl'
-import {Button, Card, Grid, Icon, Pagination} from "semantic-ui-react";
+import {Button, Card, Grid, Icon, Image} from "semantic-ui-react";
 import './ImageList.scss'
 import PropTypes from 'prop-types';
 import {Link} from "react-router-dom";
@@ -18,29 +18,29 @@ class ImageList extends Component {
 
 
     createBody = () => {
-        return this.props.list.map((item, index) => {
-            return <Grid.Column key={index} className={'margin-top-10'}>
-                <Card>
-                    <Card.Content className={'image-content'} style={{backgroundImage: `url(${item.url})`}}/>
-                </Card>
-            </Grid.Column>
-        })
-    }
-    handlePageChange = (e, data) => {
-        if (typeof this.props.handlePageChange == 'function')
-            this.props.handlePageChange(data.activePage-1)
+        return <Grid.Column className={'margin-top-10'}>
+            <Card className={'custom-card'} centered>
+                <Image src={this.props.data.url}/>
+                <Card.Content>
+                    <Card.Header>{this.props.data.title}</Card.Header>
+                    <Card.Meta>
+                        Album Id : {this.props.data.albumId}
+                    </Card.Meta>
+                    <Card.Meta>
+                        Id : {this.props.data.id}
+                    </Card.Meta>
+                </Card.Content>
+            </Card>
+        </Grid.Column>
+
     }
 
 
     render() {
-        const {currentPage, totalPage} = this.props;
-        return <Grid centered columns='three'>
+        return <Grid centered>
             <Grid.Row>
                 {this.createBody()}
             </Grid.Row>
-            {totalPage !== 1 ? <Pagination onPageChange={this.handlePageChange} className={'category-pagination'}
-                                           defaultActivePage={currentPage}
-                                           totalPages={totalPage}/> : null}
             <Grid.Row textAlign={'center'}>
                 <Link to={'/category'}>
                     <Button primary icon labelPosition='left'>
@@ -57,13 +57,11 @@ class ImageList extends Component {
 
 
 ImageList.defaultProps = {
-    list: [],
-    totalPage:1
+    data: {},
+
 };
 ImageList.propTypes = {
-    list: PropTypes.array.isRequired,
-    currentPage: PropTypes.number,
-    totalPage: PropTypes.number.isRequired,
-    handlePageChange: PropTypes.func
+    data: PropTypes.object.isRequired,
+
 };
 export default injectIntl(ImageList)

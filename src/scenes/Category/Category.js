@@ -5,34 +5,31 @@ import HttpRequest from "../../utils/HttpRequest";
 import './Category.scss'
 import CategoryList from "../../components/CategoryList/CategoryList";
 import {ToastContainer, toast} from 'react-toastify';
-import {calculatePagination} from "../../utils/Commons";
+
 
 class Category extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            categoryData: [],
-            page: 0,
-            limit: 9,
-            totalPage: 0
+            categoryData: []
         }
     }
 
     componentDidMount() {
-        this.getCategoryData(this.state.page);
+        this.getCategoryData();
 
     }
 
-    getCategoryData = (page) => {
-        const{limit}=this.state;
-        HttpRequest.get('/categories', {page: page, limit: limit}).then(response => {
-            const page = calculatePagination(response.headers['pagination-count'], response.headers['pagination-limit'])
-            this.setState({categoryData: response.data, totalPage: page})
+    getCategoryData = () => {
+        HttpRequest.get('/photos').then(response => {
+            this.setState({categoryData: this.getTop(response.data, 100)})
         }).catch(e => {
             toast.error(e);
         })
     }
-
+    getTop = (item, size) => {
+        return item.slice(0, size)
+    }
 
     render() {
         const {categoryData} = this.state;
@@ -48,7 +45,7 @@ class Category extends Component {
                 draggable
                 pauseOnHover
             />
-            <CategoryList handlePageChange={this.getCategoryData} currentPage={this.state.page} totalPage={this.state.totalPage} list={categoryData}/>
+            <CategoryList list={categoryData}/>
         </Container>
     }
 

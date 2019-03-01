@@ -5,7 +5,7 @@ let instance = axios.create()
 instance.defaults.headers['Content-Type'] = undefined
 
 
-export const backEnd = /*`${window.location.protocol}` +*/ "https://" + (process.env.REACT_APP_BACKEND || 'api.thecatapi.com/v1');
+export const backEnd = /*`${window.location.protocol}` +*/ "https://" + (process.env.REACT_APP_BACKEND || 'jsonplaceholder.typicode.com');
 
 class HttpRequest extends Component {
 
